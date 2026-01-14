@@ -30,3 +30,10 @@ The next player is chosen randomly by a roulette-style system, so the same playe
 ---
 
 ## Project Structure
+
+---
+
+### Records Until Completion
+1/13: Changed from old repository<br>
+Checked all can moved correctly<br>
+Prototype is completed
