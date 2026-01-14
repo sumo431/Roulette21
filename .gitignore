@@ -1,0 +1,10 @@
+# Build output
+/build/
+/out/
+
+# IntelliJ IDEA
+/.idea/
+/*.iml
+
+# Java class files
+*.class

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+</head>
+
+<body>
+<!-- Setup Screen -->
+<div id="setup-screen">
+    <h1 style="font-family: Impact; font-size: 60px; text-align: center;">Roulette 21</h1>
+
+    <h2 style="font-family: Arial; font-size: 20px; text-align: center;">
+        Welcome to Roulette 21! Try to get as close to 21 as possible without going over. Good luck!
+    </h2>
+
+    <label for="playerCount"
+           style="display: block;
+                  font-family: Arial;
+                  font-size: 20px;
+                  text-align: center;">
+        Player:
+        <input type="number" id="playerCount" min="2" max="6">
+    </label>
+    <br><br>
+    <button id="startbtn">Start Game</button>
+</div>
+
+<!-- Game Screen -->
+<div id="game-screen" style = "display:none;">
+    <h2 style = "font-family: Arial; font-size: 20px; text-align: center;">Game Started</h2>
+    <button id="nextturnBtn">Next Turn</button>
+    <div id="log"></div>
+</div>
+
+<script src="front.js"></script>
+</body>
+</html>
