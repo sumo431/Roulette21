@@ -37,3 +37,7 @@ The next player is chosen randomly by a roulette-style system, so the same playe
 1/13: Changed from old repository<br>
 Checked all can moved correctly<br>
 Prototype is completed
+
+1/15: add decided loser and plyer can choose the number <br>
+current issue: we cannot see the player turn(player1, player2...)<br>
+
