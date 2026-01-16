@@ -2,38 +2,49 @@ const setupScreen = document.getElementById("setup-screen");
 const gameScreen  = document.getElementById("game-screen");
 
 const playerCountInput = document.getElementById("playerCount");
-const startBtn         = document.getElementById("startbtn");
-const nextTurnBtn      = document.getElementById("nextturnBtn");
-const log              = document.getElementById("log");
+const startBtn = document.getElementById("startbtn");
+const resetBtn = document.getElementById("resetBtn");
+const log = document.getElementById("log");
 
 let playerCount = 0;
 
-startBtn.addEventListener("click", async() => {
+// Start Game
+startBtn.addEventListener("click", async () => {
     playerCount = Number(playerCountInput.value);
 
-    if(playerCount < 2 || playerCount > 6) {
+    if (playerCount < 2 || playerCount > 6) {
         alert("Player count must be between 2 and 6.");
         return;
     }
 
+    await fetch(`/start?p=${playerCount}`, { method: "POST" });
 
-    //send the player number to the server
-    await fetch(`/start?p=${playerCount}`, { method: 'POST' });
-
-    //change screens
     setupScreen.style.display = "none";
-    gameScreen.style.display  = "block";
+    gameScreen.style.display = "block";
+    log.innerHTML = "";
 });
 
-nextTurnBtn.addEventListener("click", async() => {
-    const res  = await fetch("/turn");
+// Play Turn (+1, +2, +3)
+async function playTurn(step) {
+    const res = await fetch(`/turn?step=${step}`);
     const data = await res.json();
 
     log.innerHTML +=
-        `Player ${data.player} advanced to turn ${data.step}. 
-            Current number: ${data.number}<br>`;
+        `Player ${data.player} advanced by ${step}. 
+     Current number: ${data.number}<br>`;
 
-    if (data.gameOver){
-        alert(`Player ${data.winner} wins the game!<br>`);
+
+    if (data.gameOver) {
+        alert(`Player ${data.loser} said 21 and LOST!`);
     }
+
+}
+
+// Reset Game
+resetBtn.addEventListener("click", async () => {
+    await fetch("/reset", { method: "POST" });
+
+    setupScreen.style.display = "block";
+    gameScreen.style.display = "none";
+    log.innerHTML = "";
 });

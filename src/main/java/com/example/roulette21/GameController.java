@@ -5,6 +5,7 @@ import java.util.*;
 
 @RestController
 public class GameController {
+
     int currentNumber = 0;
     int players = 0;
     Random rand = new Random();
@@ -16,15 +17,17 @@ public class GameController {
     }
 
     @GetMapping("/turn")
-    public Map<String, Object> turn() {
+    public Map<String, Object> turn(@RequestParam int step) {
+
         int player = rand.nextInt(players) + 1;
-        int step = rand.nextInt(3) + 1;
         boolean gameOver = false;
+        Integer loser = null;
 
         for (int i = 0; i < step; i++) {
             currentNumber++;
             if (currentNumber == 21) {
                 gameOver = true;
+                loser = player; // 21を言った人が負け
                 break;
             }
         }
@@ -36,7 +39,7 @@ public class GameController {
         response.put("gameOver", gameOver);
 
         if (gameOver) {
-            response.put("winner", player);
+            response.put("loser", loser);
         }
 
         return response;
