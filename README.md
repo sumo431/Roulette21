@@ -41,3 +41,4 @@ Prototype is completed
 1/15: add decided loser and plyer can choose the number <br>
 current issue: we cannot see the player turn(player1, player2...)<br>
 
+1/16: visible player's number and current number
