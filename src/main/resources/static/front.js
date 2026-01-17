@@ -4,11 +4,14 @@ const gameScreen  = document.getElementById("game-screen");
 const playerCountInput = document.getElementById("playerCount");
 const startBtn = document.getElementById("startbtn");
 const resetBtn = document.getElementById("resetBtn");
+
 const log = document.getElementById("log");
+const currentNumberDisplay = document.getElementById("numberDisplay");
+const currentPlayerDisplay = document.getElementById("playerDisplay");
 
 let playerCount = 0;
 
-// Start Game
+// ===== Start Game =====
 startBtn.addEventListener("click", async () => {
     playerCount = Number(playerCountInput.value);
 
@@ -22,25 +25,38 @@ startBtn.addEventListener("click", async () => {
     setupScreen.style.display = "none";
     gameScreen.style.display = "block";
     log.innerHTML = "";
+
+    await nextPlayer();
 });
 
-// Play Turn (+1, +2, +3)
+// ===== Decide next player BEFORE pressing =====
+async function nextPlayer() {
+    const res = await fetch("/next");
+    const data = await res.json();
+
+    currentPlayerDisplay.textContent = `Player ${data.player}'s turn`;
+    currentNumberDisplay.textContent = data.number;
+}
+
+// ===== Player chooses +1 +2 +3 =====
 async function playTurn(step) {
     const res = await fetch(`/turn?step=${step}`);
     const data = await res.json();
 
-    log.innerHTML +=
-        `Player ${data.player} advanced by ${step}. 
-     Current number: ${data.number}<br>`;
+    currentNumberDisplay.textContent = data.number;
 
+    log.innerHTML +=
+        `Player ${data.player} chose +${step}. Current number: ${data.number}<br>`;
 
     if (data.gameOver) {
         alert(`Player ${data.loser} said 21 and LOST!`);
+        return;
     }
 
+    await nextPlayer();
 }
 
-// Reset Game
+// ===== Reset =====
 resetBtn.addEventListener("click", async () => {
     await fetch("/reset", { method: "POST" });
 
