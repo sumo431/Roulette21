@@ -12,7 +12,6 @@ const currentPlayerDisplay = document.getElementById("playerDisplay");
 
 let playerCount = 0;
 
-
 //Change the number of people & name input fields
 playerCountInput.addEventListener("change", () => {
     nameInputsDiv.innerHTML = "";
@@ -44,7 +43,11 @@ startBtn.addEventListener("click", async () => {
         names.push(value === "" ? `Player ${i}` : value);
     }
 
-    await fetch(`/start?p=${playerCount}`, { method: "POST" });
+    await fetch("/start", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(names)
+    });
 
     setupScreen.style.display = "none";
     gameScreen.style.display = "block";
@@ -53,16 +56,16 @@ startBtn.addEventListener("click", async () => {
     await nextPlayer();
 });
 
-// ===== Decide next player BEFORE pressing =====
+// ===== Decide next player =====
 async function nextPlayer() {
     const res = await fetch("/next");
     const data = await res.json();
 
-    currentPlayerDisplay.textContent = `Player ${data.player}'s turn`;
+    currentPlayerDisplay.textContent = `${data.playerName}'s turn`;
     currentNumberDisplay.textContent = data.number;
 }
 
-// ===== Player chooses +1 +2 +3 =====
+// ===== Play =====
 async function playTurn(step) {
     const res = await fetch(`/turn?step=${step}`);
     const data = await res.json();
@@ -70,10 +73,10 @@ async function playTurn(step) {
     currentNumberDisplay.textContent = data.number;
 
     log.innerHTML +=
-        `Player ${data.player} chose +${step}. Current number: ${data.number}<br>`;
+        `${data.playerName} chose +${step}. Current number: ${data.number}<br>`;
 
     if (data.gameOver) {
-        alert(`Player ${data.loser} said 21 and LOST!`);
+        alert(`${data.loserName} said 21 and LOST!`);
         return;
     }
 
