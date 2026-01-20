@@ -5,11 +5,28 @@ const playerCountInput = document.getElementById("playerCount");
 const startBtn = document.getElementById("startbtn");
 const resetBtn = document.getElementById("resetBtn");
 
+const nameInputsDiv = document.getElementById("nameInputs");
 const log = document.getElementById("log");
 const currentNumberDisplay = document.getElementById("numberDisplay");
 const currentPlayerDisplay = document.getElementById("playerDisplay");
 
 let playerCount = 0;
+
+
+//Change the number of people & name input fields
+playerCountInput.addEventListener("change", () => {
+    nameInputsDiv.innerHTML = "";
+    const count = Number(playerCountInput.value);
+
+    for (let i = 1; i <= count; i++) {
+        const input = document.createElement("input");
+        input.placeholder = `Player ${i}`;
+        input.id = `playerName${i}`;
+        input.style.margin = "5px";
+        nameInputsDiv.appendChild(input);
+        nameInputsDiv.appendChild(document.createElement("br"));
+    }
+});
 
 // ===== Start Game =====
 startBtn.addEventListener("click", async () => {
@@ -18,6 +35,13 @@ startBtn.addEventListener("click", async () => {
     if (playerCount < 2 || playerCount > 6) {
         alert("Player count must be between 2 and 6.");
         return;
+    }
+
+    //name (if it is empty it will be playerX)
+    const names = [];
+    for (let i = 1; i <= playerCount; i++) {
+        const value = document.getElementById(`playerName${i}`).value.trim();
+        names.push(value === "" ? `Player ${i}` : value);
     }
 
     await fetch(`/start?p=${playerCount}`, { method: "POST" });

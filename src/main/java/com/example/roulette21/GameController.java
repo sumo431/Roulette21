@@ -7,31 +7,31 @@ import java.util.*;
 public class GameController {
 
     int currentNumber = 0;
-    int players = 0;
-    int currentPlayer = 1;
+    List<String> players = new ArrayList<>();
+    int currentPlayerIndex = 0;
 
     Random rand = new Random();
 
     // ===== Start =====
     @PostMapping("/start")
-    public void start(@RequestParam int p) {
-        players = p;
+    public void start(@RequestBody List<String> names) {
+        players = names;
         currentNumber = 0;
-        currentPlayer = rand.nextInt(players) + 1;
+        currentPlayerIndex = rand.nextInt(players.size());
     }
 
-    // ===== Decide next player BEFORE button press =====
+    // ===== Next player =====
     @GetMapping("/next")
     public Map<String, Object> next() {
-        currentPlayer = rand.nextInt(players) + 1;
+        currentPlayerIndex = rand.nextInt(players.size());
 
         Map<String, Object> res = new HashMap<>();
-        res.put("player", currentPlayer);
+        res.put("playerName", players.get(currentPlayerIndex));
         res.put("number", currentNumber);
         return res;
     }
 
-    // ===== Apply +1 +2 +3 =====
+    // ===== Turn =====
     @GetMapping("/turn")
     public Map<String, Object> turn(@RequestParam int step) {
         boolean gameOver = false;
@@ -45,13 +45,12 @@ public class GameController {
         }
 
         Map<String, Object> res = new HashMap<>();
-        res.put("player", currentPlayer);
-        res.put("step", step);
+        res.put("playerName", players.get(currentPlayerIndex));
         res.put("number", currentNumber);
         res.put("gameOver", gameOver);
 
         if (gameOver) {
-            res.put("loser", currentPlayer);
+            res.put("loserName", players.get(currentPlayerIndex));
         }
 
         return res;
@@ -61,6 +60,5 @@ public class GameController {
     @PostMapping("/reset")
     public void reset() {
         currentNumber = 0;
-        currentPlayer = rand.nextInt(players) + 1;
     }
 }
